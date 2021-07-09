@@ -1,0 +1,9 @@
+{
+    "prettier.useTabs": true,
+    "editor.fontFamily": "'PT Mono', Monospace",
+    "prettier.singleQuote": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "modifications",
+    "html.format.unformatted": "",
+    "editor.fontSize": 16
+}
