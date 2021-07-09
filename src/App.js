@@ -6,6 +6,7 @@ import { database } from './firebase/firebase';
 import firebase from 'firebase';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { lineThroughText, fetchData } from './firebase/functions';
+import Loading from './components/Loading';
 
 //firebase.firestore.FieldValue.serverTimestamp(),
 function App() {
@@ -15,17 +16,20 @@ function App() {
 	const [todoInEdit, setTodoInEdit] = useState('');
 	const [isEmpty, setIsEmpty] = useState(true);
 	const [todos, setTodos] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const apiCall = () => {
 		(async () => {
 			const data = await fetchData();
 			if (data.length > 0) setIsEmpty(false);
 			setTodos(data);
+			setIsLoading(false);
 		})();
 	};
 	useEffect(() => {
+		setIsLoading(true);
 		apiCall();
-	}, [apiCall]);
+	}, []);
 
 	const addTodoHandler = (e) => {
 		e.preventDefault();
@@ -49,7 +53,7 @@ function App() {
 			.catch((error) => console.log(error));
 	};
 
-	const markTodo = (todo, index) => {
+	const markTodo = (todo) => {
 		database
 			.collection('todos')
 			.doc(todo.id)
@@ -75,6 +79,7 @@ function App() {
 
 	const handleEdit = (e, todo, todoID, todos) => {
 		let inputInEdit = document.getElementById('input' + todo.id);
+
 		e.preventDefault();
 		setId(todoID);
 		setEditInput(inputInEdit);
@@ -83,8 +88,8 @@ function App() {
 		inputInEdit.disabled = false;
 
 		for (let i = 0; i < todos.length; i++) {
-			if (todo !== index) {
-				document.getElementById('button' + i).disabled = true;
+			if (todos[i].id !== todo.id) {
+				document.getElementById('button' + todos[i].id).disabled = true;
 			}
 		}
 		document.getElementById('savebtn').style = 'display:block;';
@@ -102,7 +107,7 @@ function App() {
 			})
 			.then(() => {
 				for (let i = 0; i < todos.length; i++) {
-					document.getElementById('button' + i).disabled = false;
+					document.getElementById('button' + todos[i].id).disabled = false;
 				}
 				editInput.disabled = true;
 				document.getElementById('savebtn').style = 'display:none;';
@@ -112,6 +117,7 @@ function App() {
 
 	return (
 		<div className='app container'>
+			{isLoading && <Loading />}
 			<h1>
 				TODO <span className='span-app'>APP</span>
 			</h1>

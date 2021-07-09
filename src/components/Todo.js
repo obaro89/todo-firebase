@@ -11,7 +11,7 @@ function Todo({ todos, markTodo, handleDelete, handleEdit, saveEdit }) {
 								className=''
 								type='checkbox'
 								checked={todo.complete}
-								onChange={() => markTodo(todo, todo.id)}
+								onChange={() => markTodo(todo)}
 							/>
 							{todo.complete ? (
 								<input
