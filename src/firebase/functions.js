@@ -1,6 +1,7 @@
 import { database } from './firebase';
 
 export const lineThroughText = (todo) => {
+	document.getElementById('checkbox' + todo.id).checked = !todo.complete;
 	if (!todo.complete) {
 		document.getElementById('input' + todo.id).style =
 			'text-decoration: line-through';
@@ -15,6 +16,6 @@ export const fetchData = async () => {
 	data.forEach((doc) => {
 		arr.push({ ...doc.data(), id: doc.id });
 	});
-	arr.sort((a, b) => b.timestamp - a.timestamp);
+
 	return arr;
 };

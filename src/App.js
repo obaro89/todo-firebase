@@ -33,6 +33,7 @@ function App() {
 
 	const addTodoHandler = (e) => {
 		e.preventDefault();
+		setIsLoading(true);
 		database
 			.collection('todos')
 			.add({
@@ -47,6 +48,7 @@ function App() {
 					complete: false,
 				};
 				setTodos([...todos, added]);
+				setIsLoading(false);
 
 				setInput('');
 			})
@@ -63,18 +65,20 @@ function App() {
 				//timestamp: firebase.firestore.FieldValue.serverTimestamp(),
 			})
 			.then(() => {
-				lineThroughText(todo.id, todo);
+				lineThroughText(todo);
 			})
 			.catch((error) => console.log(error));
 	};
 
 	const handleDelete = async (e, todo) => {
 		e.preventDefault();
+		setIsLoading(true);
 		await database.collection('todos').doc(todo.id).delete();
 		const filtered = todos.filter((t) => {
 			return t.id !== todo.id;
 		});
 		setTodos(filtered);
+		setIsLoading(false);
 	};
 
 	const handleEdit = (e, todo, todoID, todos) => {
@@ -97,6 +101,7 @@ function App() {
 
 	const saveEdit = (e) => {
 		e.preventDefault();
+		setIsLoading(true);
 		database
 			.collection('todos')
 			.doc(id)
@@ -111,16 +116,18 @@ function App() {
 				}
 				editInput.disabled = true;
 				document.getElementById('savebtn').style = 'display:none;';
+				setIsLoading(false);
 			})
 			.catch((error) => console.log(error));
 	};
 
 	return (
 		<div className='app container'>
-			{isLoading && <Loading />}
 			<h1>
 				TODO <span className='span-app'>APP</span>
 			</h1>
+
+			{isLoading && <Loading />}
 			<form className='add-todo-form'>
 				{isEmpty && (
 					<p className='alert alert-warning'>

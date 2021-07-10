@@ -5,10 +5,10 @@ function Todo({ todos, markTodo, handleDelete, handleEdit, saveEdit }) {
 		<div className='todo'>
 			<div className='todo-list'>
 				<form>
-					{todos.map((todo) => (
+					{todos.reverse().map((todo) => (
 						<p key={todo.id}>
 							<input
-								className=''
+								id={'checkbox' + todo.id}
 								type='checkbox'
 								checked={todo.complete}
 								onChange={() => markTodo(todo)}
